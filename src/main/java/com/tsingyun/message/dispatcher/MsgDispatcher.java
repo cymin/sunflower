@@ -40,8 +40,16 @@ public class MsgDispatcher {
         switch (messageType) {
             case text:
                 // 文本消息
-                logger.info("==============这是文本消息！");
-                break;
+                String content = map.get("Content");
+                logger.debug("==============这是文本消息, 收到消息：{}", content);
+                if (content.equals(UNSUPPORTED_MESSAGE)) {
+                    // 对于收藏的表情包，不作回复，回复""或success，注意仅单词或空字符，不需要封装成xml消息
+                    return "";
+                } else {
+                    // 获取接收到的消息内容，用户发送什么内容，就回复给用户什么
+                    String textMessage = MessageUtil.createTextMessage(openid, mpid, content);
+                    return textMessage;
+                }
             case image:
                 // 图片消息
                 logger.info("==============这是图片消息！");
