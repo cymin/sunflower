@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: prod
+  http:
+    encoding:
+      force: true
+
+---
+spring:
+  profiles: dev
+
+logging:
+  level:
+    root: WARN
+    com.tsingyun: DEBUG
+
+---
+spring:
+  profiles: prod
+
+logging:
+  level:
+    root: WARN
+    com.tsingyun: info
+    com.tsingyun.message: debug
+
+server:
+  port: 80
