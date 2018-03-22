@@ -1,12 +1,14 @@
 package com.tsingyun.message.dispatcher;
 
-import com.tsingyun.message.resp.TextMessage;
+import com.tsingyun.message.resp.*;
 import com.tsingyun.model.MessageType;
 import com.tsingyun.utils.MessageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,8 +54,32 @@ public class MsgDispatcher {
                 }
             case image:
                 // 图片消息
-                logger.info("==============这是图片消息！");
-                break;
+                logger.debug("==============这是图片消息！");
+                NewsMessage newsMessage = new NewsMessage();
+                newsMessage.setToUserName(openid);
+                newsMessage.setFromUserName(mpid);
+                newsMessage.setCreateTime(System.currentTimeMillis());
+                newsMessage.setMsgType(MessageType.news.getValue());
+
+                List<Article> list = new ArrayList<>();
+                Article article = new Article();
+                article.setDescription("Sunflower 1"); //图文消息的描述
+                article.setPicUrl("http://img.aiyidu.com/forum/201508/13/093646akn2stmkdz4krsrs.jpg"); //图文消息图片地址
+                article.setTitle("Sunflower 1 \nI will keep on windowsill a sunflower, because it is like sunshine to my warm.");  //图文消息标题
+                article.setUrl("http://dimg09.c-ctrip.com/images/tg/618/622/083/5c3c79c3702a4019a6eaf3892eed6637.jpg");  //图文 url 链接
+                list.add(article);
+
+                // 如果需要发送多图文则在这里 list 中加入多个 Article 即可
+                article = new Article();
+                article.setDescription("Sunflower 2"); //图文消息的描述
+                article.setPicUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1521716985326&di=9ce2215e9157016c042923d827aa6221&imgtype=0&src=http%3A%2F%2Fwww.diypin.com%2Fdo%2FResource%2FS%2F61.jpg"); //图文消息图片地址
+                article.setTitle("Sunflower 2");  //图文消息标题
+                article.setUrl("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1522311768&di=c48e1944ae030a3c7dd67286b0239332&imgtype=jpg&er=1&src=http%3A%2F%2Fwww.020bom.com%2Fimages%2FTB1KJ0EJpXXXXbYXpXXXXXXXXXX_%21%210-item_pic.jpg_400x400.jpg");  //图文 url 链接
+                list.add(article);
+
+                newsMessage.setArticleCount(list.size());
+                newsMessage.setArticles(list);
+                return MessageUtil.newsMessageToXml(newsMessage);
             case link:
                 logger.info("==============这是链接消息！");
                 break;
